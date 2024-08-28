@@ -1,0 +1,15 @@
+{
+  "resources": [
+    {
+      "path": "pyproject.toml",
+      "type": "toml",
+      "params": {
+        "property": "tool.poetry.version"
+      }
+    },
+    {
+      "path": "CHANGELOG.md",
+      "type": "keep-a-changelog"
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+[build-system]
+requires = [ "poetry-core" ]
+build-backend = "poetry.core.masonry.api"
+
+[installer]
+no-binary = [ ":none:" ]
+
+[tool.poetry]
+name = "s3empty"
+version = "0.9.0-pre.0"
+description = "Python CLI for convenient emptying of S3 bucket"
+license = "Apache-2.0"
+authors = [ "Cliffano Subagio <cliffano@gmail.com>" ]
+readme = "README.md"
+homepage = "https://github.com/cliffano/s3empty"
+repository = "https://github.com/cliffano/s3empty"
+documentation = "https://github.com/cliffano/s3empty"
+keywords = [ "s3empty", "..." ]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: Apache Software License",
+  "Operating System :: OS Independent"
+]
+
+[[tool.poetry.packages]]
+include = "s3empty"
+
+[tool.poetry.scripts]
+s3empty = "s3empty:cli"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+boto3 = "1.35.6"
+click = "8.1.3"
+conflog = "1.5.1"
+PyYAML = "6.0.1"
+
+[tool.poetry.group.dev.dependencies]
+twine = "4.0.0"
+wheel = "0.40.0"
+
+[tool.poetry.group.test.dependencies]
+coverage = "7.2.3"
+pylint = "3.0.1"
+pytest = "7.3.1"
+wily = "1.24.0"
+
+[tool.poetry.group.doc.dependencies]
+pylint-report = "2.4.0"
+pytest-html = "3.2.0"
+Sphinx = "6.2.1"
