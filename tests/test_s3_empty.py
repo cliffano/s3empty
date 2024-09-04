@@ -8,38 +8,37 @@ from s3empty import cli
 
 class TestS3Empty(unittest.TestCase):
 
-    # @patch('boto3.resource')
-    # @patch('s3empty.init')
-    # def test_empty_s3_with_bucket_versioning_enabled( # pylint: disable=too-many-arguments
-    #         self,
-    #         func_init,
-    #         func_resource):
+    @patch('boto3.resource')
+    @patch('s3empty.init')
+    def test_empty_s3_with_bucket_versioning_enabled( # pylint: disable=too-many-arguments
+            self,
+            func_init,
+            func_resource):
 
-    #     mock_logger = unittest.mock.Mock()
-    #     mock_resource = unittest.mock.Mock()
-    #     mock_bucket_versioning = unittest.mock.Mock()
-    #     mock_bucket = unittest.mock.Mock()
-    #     mock_bucket_object_versions = unittest.mock.Mock()
+        mock_logger = unittest.mock.Mock()
+        mock_bucket_versioning = unittest.mock.Mock()
+        mock_bucket = unittest.mock.Mock()
+        mock_bucket_object_versions = unittest.mock.Mock()
 
-    #     func_init.return_value = mock_logger
-    #     func_resource.return_value = mock_resource
+        func_init.return_value = mock_logger
 
-    #     mock_resource.Bucket.return_value = mock_bucket
-    #     mock_resource.BucketVersioning.return_value = mock_bucket_versioning
-    #     mock_bucket_versioning.status = unittest.mock.PropertyMock(return_value='Enabled')
-    #     mock_bucket.object_versions.return_value = mock_bucket_object_versions
+        func_init.return_value = mock_logger
+        func_resource.return_value.Bucket.return_value = mock_bucket
+        func_resource.return_value.BucketVersioning.return_value = mock_bucket_versioning
+        mock_bucket_versioning.status = 'Enabled'
+        mock_bucket.object_versions = mock_bucket_object_versions
 
-    #     empty_s3(bucket_name='some-bucket')
+        empty_s3(bucket_name='some-bucket')
 
-    #     self.assertEqual(mock_logger.info.call_count, 1)
-    #     mock_logger.info.assert_has_calls([
-    #         call('Emptying all objects and versions in bucket some-bucket')
-    #     ])
+        self.assertEqual(mock_logger.info.call_count, 1)
+        mock_logger.info.assert_has_calls([
+            call('Emptying all objects and versions in bucket some-bucket')
+        ])
 
-    #     self.assertEqual(mock_bucket_object_versions.delete.call_count, 1)
-    #     mock_bucket_object_versions.delete.assert_has_calls([
-    #         call()
-    #     ])
+        self.assertEqual(mock_bucket_object_versions.delete.call_count, 1)
+        mock_bucket_object_versions.delete.assert_has_calls([
+            call()
+        ])
 
     @patch('boto3.resource')
     @patch('s3empty.init')
@@ -49,20 +48,15 @@ class TestS3Empty(unittest.TestCase):
             func_resource):
 
         mock_logger = unittest.mock.Mock()
-        mock_resource = unittest.mock.Mock()
         mock_bucket_versioning = unittest.mock.Mock()
         mock_bucket = unittest.mock.Mock()
-        mock_bucket_objects = unittest.mock.Mock()
         mock_bucket_objects_all = unittest.mock.Mock()
 
         func_init.return_value = mock_logger
-        func_resource.return_value = mock_resource
-
-        mock_resource.Bucket.return_value = mock_bucket
-        mock_resource.BucketVersioning.return_value = mock_bucket_versioning
-        mock_bucket_versioning.status = unittest.mock.PropertyMock(return_value='Disabled')
-        mock_bucket.objects = unittest.mock.PropertyMock(return_value=mock_bucket_objects)
-        mock_bucket_objects.all.return_value = mock_bucket_objects_all
+        func_resource.return_value.Bucket.return_value = mock_bucket
+        func_resource.return_value.BucketVersioning.return_value = mock_bucket_versioning
+        mock_bucket_versioning.status = 'Disabled'
+        mock_bucket.objects.all.return_value = mock_bucket_objects_all
 
         empty_s3(bucket_name='some-bucket')
 
@@ -71,10 +65,10 @@ class TestS3Empty(unittest.TestCase):
             call('Emptying all objects in bucket some-bucket')
         ])
 
-        # self.assertEqual(mock_bucket_objects_all.delete.call_count, 1)
-        # mock_bucket_objects_all.delete.assert_has_calls([
-        #     call()
-        # ])
+        self.assertEqual(mock_bucket_objects_all.delete.call_count, 1)
+        mock_bucket_objects_all.delete.assert_has_calls([
+            call()
+        ])
 
     @patch('s3empty.empty_s3')
     def test_cli( # pylint: disable=too-many-arguments
