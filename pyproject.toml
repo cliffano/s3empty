@@ -7,7 +7,7 @@ no-binary = [ ":none:" ]
 
 [tool.poetry]
 name = "s3empty"
-version = "0.9.0-pre.0"
+version = "0.10.0"
 description = "Python CLI for convenient emptying of S3 bucket"
 license = "Apache-2.0"
 authors = [ "Cliffano Subagio <cliffano@gmail.com>" ]
@@ -22,19 +22,19 @@ classifiers = [
   "Operating System :: OS Independent"
 ]
 
-[[tool.poetry.packages]]
-include = "s3empty"
+  [[tool.poetry.packages]]
+  include = "s3empty"
 
-[tool.poetry.scripts]
-s3empty = "s3empty:cli"
+  [tool.poetry.scripts]
+  s3empty = "s3empty:cli"
 
-[tool.poetry.dependencies]
-python = "^3.10"
-boto3 = "1.35.6"
-click = "8.1.7"
-conflog = "1.5.1"
-pillow = "10.3.0"
-PyYAML = "6.0.1"
+  [tool.poetry.dependencies]
+  python = "^3.10"
+  boto3 = "1.35.6"
+  click = "8.1.7"
+  conflog = "1.5.1"
+  pillow = "10.3.0"
+  PyYAML = "6.0.1"
 
 [tool.poetry.group.dev.dependencies]
 twine = "5.1.1"
@@ -42,7 +42,7 @@ wheel = "0.44.0"
 
 [tool.poetry.group.test.dependencies]
 coverage = "7.2.3"
-numpy = "1.26.4" # https://stackoverflow.com/questions/78634235/numpy-dtype-size-changed-may-indicate-binary-incompatibility-expected-96-from
+numpy = "1.26.4"
 pylint = "3.2.6"
 pytest = "8.3.2"
 wily = "1.25.0"
