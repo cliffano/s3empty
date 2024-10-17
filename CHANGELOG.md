@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- Add aws-assume-role-lib and awscli for example testing
+
+### Changed
+- Downgrade Sphinx to 5.3.0 due to awscli compatibility
+
 ## 0.10.1 - 2024-09-17
 ### Fixed
 - Fix publish workflow's token syntax
