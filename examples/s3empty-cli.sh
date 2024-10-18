@@ -11,7 +11,7 @@ s3empty
 
 export AWS_DEFAULT_REGION=ap-southeast-2
 ACCOUNT_ID=$(AWS_PROFILE=studio-tester aws sts get-caller-identity --query Account --output text)
-export $(python -m aws_assume_role_lib arn:aws:iam::${ACCOUNT_ID}:role/studio-awstaga --profile studio-tester --env)
+export $(python -m aws_assume_role_lib arn:aws:iam::${ACCOUNT_ID}:role/studio-s3empty --profile studio-tester --env)
 
 echo "\n\n========================================"
 echo "Run command with bucket having versioning enabled:"
