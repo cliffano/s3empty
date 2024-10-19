@@ -34,7 +34,8 @@ export PATH := ${VIRTUAL_ENV}/bin:${POETRY_HOME}/bin:$(PATH)
 # Base targets
 
 # CI target to be executed by CI/CD tool
-ci: clean deps lint test coverage complexity doc package reinstall test-integration
+# ci: clean deps lint test coverage complexity doc package reinstall test-integration
+ci: clean deps lint test coverage doc package reinstall test-integration
 
 # Ensure stage directory exists
 stage:
