@@ -47,17 +47,17 @@ def _handle_response(logger, response: dict, success_message: str) -> None:
 
 def _log_deleted_items(logger, deleted_items: list) -> None:
     for deleted in deleted_items:
-        if 'Version' in deleted:
-            logger.info(f'Deleted {deleted["Key"]} version {deleted["Version"]}')
+        if 'VersionId' in deleted:
+            logger.info(f'Deleted {deleted["Key"]} {deleted["VersionId"]}')
         else:
             logger.info(f'Deleted {deleted["Key"]}')
 
 def _log_error_items(logger, error_items: list) -> None:
     for error in error_items:
-        if 'Version' in error:
+        if 'VersionId' in error:
             logger.error((
                 f'Error {error["Code"]} - Unable to delete '
-                f'key {error["Key"]} version {error["Version"]}: {error["Message"]}'
+                f'key {error["Key"]} {error["VersionId"]}: {error["Message"]}'
             ))
         else:
             logger.error((

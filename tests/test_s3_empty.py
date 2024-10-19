@@ -25,7 +25,7 @@ class TestS3Empty(unittest.TestCase):
                 'Deleted': [
                     {
                         'Key': 'some-key1',
-                        'Version': 'some-version1'
+                        'VersionId': 'some-version1'
                     }
                 ]
             }
@@ -47,7 +47,7 @@ class TestS3Empty(unittest.TestCase):
             call('Emptying all objects and versions in bucket some-bucket...')
         ])
         mock_logger.info.assert_has_calls([
-            call('Deleted some-key1 version some-version1')
+            call('Deleted some-key1 some-version1')
         ])
         mock_logger.info.assert_has_calls([
             call('Successfully emptied all objects and versions in bucket some-bucket')
@@ -76,7 +76,7 @@ class TestS3Empty(unittest.TestCase):
                     {
                         'Code': 'some-code1',
                         'Key': 'some-key1',
-                        'Version': 'some-version1',
+                        'VersionId': 'some-version1',
                         'Message': 'some-message1'
                     }
                 ]
@@ -98,7 +98,7 @@ class TestS3Empty(unittest.TestCase):
         mock_logger.error.assert_has_calls([
             call((
                 'Error some-code1 - Unable to delete '
-                'key some-key1 version some-version1: some-message1'
+                'key some-key1 some-version1: some-message1'
             ))
         ])
 
