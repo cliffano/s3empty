@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add aws-assume-role-lib and awscli for example testing
 - Add buckets with and without versioning to integration testing
 - Add assume role to integration testing
+- Add response handling with errors and deletions logging
 
 ### Changed
 - Downgrade Sphinx to 5.3.0 due to awscli compatibility
