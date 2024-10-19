@@ -1,13 +1,15 @@
 # pylint: disable=too-many-locals
 """
 s3empty
+=======
+Empty an AWS S3 bucket, versioned, not versioned, anything.
 """
 import boto3
 import click
 from .logger import init
 
 def empty_s3(bucket_name: str) -> None:
-    """Display text from configuration file."""
+    """Empty all objects within an S3 bucket."""
 
     logger = init()
 
@@ -26,7 +28,7 @@ def empty_s3(bucket_name: str) -> None:
         success_message = f'Successfully emptied all objects in bucket {bucket_name}'
         _handle_response(logger, response, success_message)
 
-def _handle_response(logger, response, success_message):
+def _handle_response(logger, response: dict, success_message: str) -> None:
     if isinstance(response, list) and len(response) >= 1:
         has_error = False
         for response_item in response:
@@ -43,14 +45,14 @@ def _handle_response(logger, response, success_message):
         logger.error('Unexpected response:')
         logger.error(response)
 
-def _log_deleted_items(logger, deleted_items):
+def _log_deleted_items(logger, deleted_items: list) -> None:
     for deleted in deleted_items:
         if 'Version' in deleted:
             logger.info(f'Deleted {deleted["Key"]} version {deleted["Version"]}')
         else:
             logger.info(f'Deleted {deleted["Key"]}')
 
-def _log_error_items(logger, error_items):
+def _log_error_items(logger, error_items: list) -> None:
     for error in error_items:
         if 'Version' in error:
             logger.error((
