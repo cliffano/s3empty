@@ -15,7 +15,7 @@ This tool is useful when you want to delete all objects in a bucket before delet
 
     BucketNotEmpty: The bucket you tried to delete is not empty. You must delete all versions in the bucket.
 
-![S3Empty console screenshot](screenshots/console.jpg "S3Empty console screenshot")
+![S3Empty console screenshot](https://raw.github.com/cliffano/s3empty/master/screenshots/console.jpg "S3Empty console screenshot")
 
 Installation
 ------------
