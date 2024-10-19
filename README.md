@@ -23,13 +23,41 @@ Installation
 Usage
 -----
 
-Run s3empty with specified bucket name:
+Run S3Empty with specified bucket name:
 
     s3empty --bucket-name some-bucket
 
 Show help guide:
 
     s3empty --help
+
+Permission
+----------
+
+Here's an IAM policy with minimum permissions required by S3Empty:
+
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "S3EmptyPolicy",
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetBucketVersioning",
+                "s3:ListBucket",
+                "s3:ListBucketVersions",
+                "s3:DeleteObject",
+                "s3:DeleteObjectVersion",
+            ],
+            "Resource": [
+                "arn:aws:s3:::some-bucket",
+                "arn:aws:s3:::some-bucket/*"
+            ]
+        }
+    ]
+}
+```
 
 Colophon
 --------
