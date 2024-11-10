@@ -7,4 +7,4 @@ class TestConstructor(unittest.TestCase):
 
     def test_constructor_without_credential(self):
         with self.assertRaises(botocore.exceptions.NoCredentialsError):
-            empty_s3('some-bucket')
+            empty_s3('some-bucket', None)

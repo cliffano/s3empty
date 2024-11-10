@@ -6,14 +6,36 @@ Empty an AWS S3 bucket, versioned, not versioned, anything.
 """
 import boto3
 import click
+from cfgrw import CFGRW
 from .logger import init
 
-def empty_s3(bucket_name: str) -> None:
-    """Empty all objects within an S3 bucket."""
+def empty_s3(bucket_name: str, conf_file: str) -> None:
+    """Process the bucket names to be emptied."""
 
     logger = init()
-
     s3 = boto3.resource('s3')
+
+    bucket_names = []
+
+    if bucket_name is not None:
+        bucket_names.append(bucket_name)
+
+    if conf_file is not None:
+        logger.info(f'Reading configuration file {conf_file}')
+        cfgrw = CFGRW(conf_file=conf_file)
+        conf_values = cfgrw.read(['bucket_names'])
+        bucket_names.extend(conf_values['bucket_names'])
+
+    if not bucket_names:
+        logger.warn('No buckets specified to be emptied')
+    else:
+        logger.info(f'Buckets to be emptied: {", ".join(bucket_names)}')
+        for _bucket_name in bucket_names:
+            _empty_s3_bucket(logger, s3, _bucket_name)
+
+def _empty_s3_bucket(logger: object, s3: object, bucket_name: str) -> None:
+    """Empty all objects within an S3 bucket."""
+
     s3_bucket = s3.Bucket(bucket_name)
     bucket_versioning = s3.BucketVersioning(bucket_name)
 
@@ -66,9 +88,11 @@ def _log_error_items(logger, error_items: list) -> None:
             ))
 
 @click.command()
-@click.option('--bucket-name', required=True, show_default=True, type=str,
+@click.option('--bucket-name', required=False, show_default=True, type=str,
               help='S3 bucket name to be emptied')
-def cli(bucket_name: str) -> None:
+@click.option('--conf-file', required=False, show_default=True, type=str,
+              help='Configuration file containing S3 bucket names to be emptied')
+def cli(bucket_name: str, conf_file: str) -> None:
     """Python CLI for convenient emptying of S3 bucket
     """
-    empty_s3(bucket_name)
+    empty_s3(bucket_name, conf_file)

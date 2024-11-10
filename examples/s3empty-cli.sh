@@ -37,3 +37,18 @@ printf "\n\n========================================\n"
 echo "Second run command with bucket not having versioning enabled when bucket is already emptied:"
 echo "s3empty --bucket-name studio-s3empty-without-versioning"
 s3empty --bucket-name studio-s3empty-without-versioning
+
+printf "\n\n========================================\n"
+echo "Run command with configuration file:"
+echo "s3empty --conf-file s3empty-conf.yaml"
+s3empty --conf-file s3empty-conf.yaml
+
+printf "\n\n========================================\n"
+echo "Run command with configuration template file:"
+echo "s3empty --conf-file s3empty-conf.yaml.j2"
+STUDIO_ID=studio s3empty --conf-file s3empty-conf.yaml.j2
+
+printf "\n\n========================================\n"
+echo "Run command with combination of bucket and configuration file:"
+echo "s3empty --bucket-name studio-s3empty-with-versioning --conf-file s3empty-conf.yaml"
+s3empty --bucket-name studio-s3empty-with-versioning --conf-file s3empty-conf.yaml

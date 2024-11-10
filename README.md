@@ -29,9 +29,40 @@ Run S3Empty with specified bucket name:
 
     s3empty --bucket-name some-bucket
 
+Run S3Empty with a configuration file containing the bucket names:
+
+    s3empty --conf-file path/to/some-conf-file.yaml
+
 Show help guide:
 
     s3empty --help
+
+Configuration
+-------------
+
+You can specify multiple bucket names in S3Empty configuration file and give it a name with `.yaml` extension, e.g. `some-conf-file.yaml` :
+
+    ---
+    bucket_names:
+      - some-bucket-1
+      - some-bucket-2
+
+And then call S3Empty:
+
+    s3empty --conf-file path/to/some-conf-file.yaml
+
+The configuration file also supports Jinja template where environment variables are available for use. You can give this configuration template a name with `.yaml.j2` extension, e.g. `some-conf-file.yaml.j2` .
+
+For example, if there is an environment variable `ACCOUNT_ID=1234567` , you can specify it in the configuration file:
+
+    ---
+    bucket_names:
+      - some-{{ env.ACCOUNT_ID }}-bucket-1
+      - some-{{ env.ACCOUNT_ID }}-bucket-2
+
+And then call S3Empty:
+
+    s3empty --conf-file path/to/some-conf-file.yaml.j2
 
 Permission
 ----------

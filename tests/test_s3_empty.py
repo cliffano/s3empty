@@ -40,9 +40,12 @@ class TestS3Empty(unittest.TestCase):
         mock_bucket.object_versions = mock_bucket_object_versions
         mock_bucket_object_versions.delete.return_value = mock_response
 
-        empty_s3(bucket_name='some-bucket')
+        empty_s3(bucket_name='some-bucket', conf_file=None)
 
-        self.assertEqual(mock_logger.info.call_count, 3)
+        self.assertEqual(mock_logger.info.call_count, 4)
+        mock_logger.info.assert_has_calls([
+            call('Buckets to be emptied: some-bucket')
+        ])
         mock_logger.info.assert_has_calls([
             call('Emptying all objects and versions in bucket some-bucket...')
         ])
@@ -92,7 +95,7 @@ class TestS3Empty(unittest.TestCase):
         mock_bucket.object_versions = mock_bucket_object_versions
         mock_bucket_object_versions.delete.return_value = mock_response
 
-        empty_s3(bucket_name='some-bucket')
+        empty_s3(bucket_name='some-bucket', conf_file=None)
 
         self.assertEqual(mock_logger.error.call_count, 1)
         mock_logger.error.assert_has_calls([
@@ -102,7 +105,10 @@ class TestS3Empty(unittest.TestCase):
             ))
         ])
 
-        self.assertEqual(mock_logger.info.call_count, 1)
+        self.assertEqual(mock_logger.info.call_count, 2)
+        mock_logger.info.assert_has_calls([
+            call('Buckets to be emptied: some-bucket')
+        ])
         mock_logger.info.assert_has_calls([
             call('Emptying all objects and versions in bucket some-bucket...')
         ])
@@ -141,9 +147,12 @@ class TestS3Empty(unittest.TestCase):
         mock_bucket.objects.all.return_value = mock_bucket_objects_all
         mock_bucket_objects_all.delete.return_value = mock_response
 
-        empty_s3(bucket_name='some-bucket')
+        empty_s3(bucket_name='some-bucket', conf_file=None)
 
-        self.assertEqual(mock_logger.info.call_count, 3)
+        self.assertEqual(mock_logger.info.call_count, 4)
+        mock_logger.info.assert_has_calls([
+            call('Buckets to be emptied: some-bucket')
+        ])
         mock_logger.info.assert_has_calls([
             call('Emptying all objects in bucket some-bucket...')
         ])
@@ -190,14 +199,17 @@ class TestS3Empty(unittest.TestCase):
         mock_bucket.objects.all.return_value = mock_bucket_objects_all
         mock_bucket_objects_all.delete.return_value = mock_response
 
-        empty_s3(bucket_name='some-bucket')
+        empty_s3(bucket_name='some-bucket', conf_file=None)
 
         self.assertEqual(mock_logger.error.call_count, 1)
         mock_logger.error.assert_has_calls([
             call('Error some-code1 - Unable to delete key some-key1: some-message1')
         ])
 
-        self.assertEqual(mock_logger.info.call_count, 1)
+        self.assertEqual(mock_logger.info.call_count, 2)
+        mock_logger.info.assert_has_calls([
+            call('Buckets to be emptied: some-bucket')
+        ])
         mock_logger.info.assert_has_calls([
             call('Emptying all objects in bucket some-bucket...')
         ])
@@ -229,9 +241,12 @@ class TestS3Empty(unittest.TestCase):
         mock_bucket.object_versions = mock_bucket_object_versions
         mock_bucket_object_versions.delete.return_value = mock_response
 
-        empty_s3(bucket_name='some-bucket')
+        empty_s3(bucket_name='some-bucket', conf_file=None)
 
-        self.assertEqual(mock_logger.info.call_count, 2)
+        self.assertEqual(mock_logger.info.call_count, 3)
+        mock_logger.info.assert_has_calls([
+            call('Buckets to be emptied: some-bucket')
+        ])
         mock_logger.info.assert_has_calls([
             call('Emptying all objects and versions in bucket some-bucket...')
         ])
@@ -266,7 +281,7 @@ class TestS3Empty(unittest.TestCase):
         mock_bucket.object_versions = mock_bucket_object_versions
         mock_bucket_object_versions.delete.return_value = mock_response
 
-        empty_s3(bucket_name='some-bucket')
+        empty_s3(bucket_name='some-bucket', conf_file=None)
 
         self.assertEqual(mock_logger.error.call_count, 2)
         mock_logger.error.assert_has_calls([
@@ -274,7 +289,10 @@ class TestS3Empty(unittest.TestCase):
             call('some-unexpected-message')
         ])
 
-        self.assertEqual(mock_logger.info.call_count, 1)
+        self.assertEqual(mock_logger.info.call_count, 2)
+        mock_logger.info.assert_has_calls([
+            call('Buckets to be emptied: some-bucket')
+        ])
         mock_logger.info.assert_has_calls([
             call('Emptying all objects and versions in bucket some-bucket...')
         ])
@@ -301,4 +319,4 @@ class TestS3Empty(unittest.TestCase):
         assert result.output == ''
 
         # should delegate call to apply
-        func_empty_s3.assert_called_once_with('some-bucket')
+        func_empty_s3.assert_called_once_with('some-bucket', None)

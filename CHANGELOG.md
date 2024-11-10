@@ -7,7 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- Add configuration file support
+
 ## 1.0.1 - 2024-10-19
+
+### Fixed
+- Fix VersionId key name
 
 ## 1.0.0 - 2024-10-19
 ### Added
