@@ -27,7 +27,7 @@ def empty_s3(bucket_name: str, conf_file: str) -> None:
         bucket_names.extend(conf_values['bucket_names'])
 
     if not bucket_names:
-        logger.warn('No buckets specified to be emptied')
+        logger.warning('No buckets specified to be emptied')
     else:
         logger.info(f'Buckets to be emptied: {", ".join(bucket_names)}')
         for _bucket_name in bucket_names:
