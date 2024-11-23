@@ -1,0 +1,4 @@
+---
+bucket_names:
+  - studio-s3empty-inexisting-1
+  - studio-s3empty-inexisting-2

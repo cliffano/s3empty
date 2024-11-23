@@ -3,6 +3,7 @@ from unittest.mock import patch, call
 import unittest.mock
 import unittest
 from click.testing import CliRunner
+from botocore.exceptions import ClientError
 from s3empty import empty_s3
 from s3empty import cli
 
@@ -319,4 +320,155 @@ class TestS3Empty(unittest.TestCase):
         assert result.output == ''
 
         # should delegate call to apply
-        func_empty_s3.assert_called_once_with('some-bucket', None)
+        func_empty_s3.assert_called_once_with('some-bucket', None, False)
+
+    @patch('boto3.resource')
+    @patch('s3empty.init')
+    @patch('s3empty.CFGRW')
+    def test_empty_s3_with_bucket_versioning_enabled_and_successful_deletion_via_config_file( # pylint: disable=too-many-arguments
+            self,
+            func_cfgrw,
+            func_init,
+            func_resource):
+
+        mock_logger = unittest.mock.Mock()
+        mock_bucket_versioning = unittest.mock.Mock()
+        mock_bucket = unittest.mock.Mock()
+        mock_bucket_object_versions = unittest.mock.Mock()
+        mock_response = [
+            {
+                'ResponseMetadata': {},
+                'Deleted': [
+                    {
+                        'Key': 'some-key1',
+                        'VersionId': 'some-version1'
+                    }
+                ]
+            }
+        ]
+        mock_cfgrw_instance = unittest.mock.Mock()
+        mock_cfgrw_instance.read.return_value = {'bucket_names': ['some-bucket']}
+        func_cfgrw.return_value = mock_cfgrw_instance
+
+        func_init.return_value = mock_logger
+        func_resource.return_value.Bucket.return_value = mock_bucket
+        func_resource.return_value.BucketVersioning.return_value = mock_bucket_versioning
+        mock_bucket_versioning.status = 'Enabled'
+        mock_bucket.object_versions = mock_bucket_object_versions
+        mock_bucket_object_versions.delete.return_value = mock_response
+
+        empty_s3(bucket_name=None, conf_file='some-s3empty.yaml')
+
+        self.assertEqual(mock_logger.info.call_count, 5)
+        mock_logger.info.assert_has_calls([
+            call('Reading configuration file some-s3empty.yaml'),
+            call('Buckets to be emptied: some-bucket'),
+            call('Emptying all objects and versions in bucket some-bucket...'),
+            call('Deleted some-key1 some-version1'),
+            call('Successfully emptied all objects and versions in bucket some-bucket')
+        ])
+
+        self.assertEqual(mock_bucket_object_versions.delete.call_count, 1)
+        mock_bucket_object_versions.delete.assert_has_calls([
+            call()
+        ])
+
+    @patch('boto3.resource')
+    @patch('s3empty.init')
+    def test_empty_s3_with_none_bucket_name_and_none_config_file( # pylint: disable=too-many-arguments
+            self,
+            func_init,
+            func_resource):
+
+        mock_logger = unittest.mock.Mock()
+        func_init.return_value = mock_logger
+
+        empty_s3(bucket_name=None, conf_file=None)
+
+        self.assertEqual(mock_logger.warning.call_count, 1)
+        mock_logger.warning.assert_has_calls([
+            call('No buckets specified to be emptied')
+        ])
+
+        self.assertEqual(func_resource.return_value.Bucket.call_count, 0)
+        self.assertEqual(func_resource.return_value.BucketVersioning.call_count, 0)
+
+    @patch('boto3.resource')
+    @patch('s3empty.init')
+    def test_empty_s3_with_bucket_versioning_enabled_and_client_error_raised_when_allow_inexisting_is_true( # pylint: disable=too-many-arguments
+            self,
+            func_init,
+            func_resource):
+
+        mock_logger = unittest.mock.Mock()
+        mock_bucket_versioning = unittest.mock.Mock()
+        mock_bucket = unittest.mock.Mock()
+        mock_bucket_object_versions = unittest.mock.Mock()
+
+        func_init.return_value = mock_logger
+        func_resource.return_value.Bucket.return_value = mock_bucket
+        func_resource.return_value.BucketVersioning.return_value = mock_bucket_versioning
+        mock_bucket_versioning.status = 'Enabled'
+        mock_bucket.object_versions = mock_bucket_object_versions
+
+        mock_bucket_object_versions.delete.side_effect = ClientError(
+            error_response={'Error': {'Code': 'NoSuchBucket'}},
+            operation_name='DeleteObjects'
+        )
+
+        empty_s3(bucket_name='some-bucket', conf_file=None, allow_inexisting=True)
+
+        self.assertEqual(mock_logger.info.call_count, 2)
+        mock_logger.info.assert_has_calls([
+            call('Buckets to be emptied: some-bucket'),
+            call('Emptying all objects and versions in bucket some-bucket...')
+        ])
+
+        self.assertEqual(mock_logger.warning.call_count, 1)
+        mock_logger.warning.assert_has_calls([
+            call('Bucket some-bucket does not exist')
+        ])
+
+        self.assertEqual(mock_bucket_object_versions.delete.call_count, 1)
+        mock_bucket_object_versions.delete.assert_has_calls([
+            call()
+        ])
+
+    @patch('boto3.resource')
+    @patch('s3empty.init')
+    def test_empty_s3_with_bucket_versioning_enabled_and_client_error_raised_when_allow_inexisting_is_false( # pylint: disable=too-many-arguments
+            self,
+            func_init,
+            func_resource):
+
+        mock_logger = unittest.mock.Mock()
+        mock_bucket_versioning = unittest.mock.Mock()
+        mock_bucket = unittest.mock.Mock()
+        mock_bucket_object_versions = unittest.mock.Mock()
+
+        func_init.return_value = mock_logger
+        func_resource.return_value.Bucket.return_value = mock_bucket
+        func_resource.return_value.BucketVersioning.return_value = mock_bucket_versioning
+        mock_bucket_versioning.status = 'Enabled'
+        mock_bucket.object_versions = mock_bucket_object_versions
+
+        mock_bucket_object_versions.delete.side_effect = ClientError(
+            error_response={'Error': {'Code': 'NoSuchBucket'}},
+            operation_name='DeleteObjects'
+        )
+
+        with self.assertRaises(ClientError):
+            empty_s3(bucket_name='some-bucket', conf_file=None, allow_inexisting=False)
+
+        self.assertEqual(mock_logger.info.call_count, 2)
+        mock_logger.info.assert_has_calls([
+            call('Buckets to be emptied: some-bucket'),
+            call('Emptying all objects and versions in bucket some-bucket...')
+        ])
+
+        self.assertEqual(mock_logger.warning.call_count, 0)
+
+        self.assertEqual(mock_bucket_object_versions.delete.call_count, 1)
+        mock_bucket_object_versions.delete.assert_has_calls([
+            call()
+        ])

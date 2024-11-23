@@ -39,16 +39,32 @@ echo "s3empty --bucket-name studio-s3empty-without-versioning"
 s3empty --bucket-name studio-s3empty-without-versioning
 
 printf "\n\n========================================\n"
-echo "Run command with configuration file:"
-echo "s3empty --conf-file s3empty-conf.yaml"
-s3empty --conf-file s3empty-conf.yaml
+echo "Run command with inexisting bucket:"
+echo "s3empty --bucket-name studio-s3empty-inexisting"
+s3empty --bucket-name studio-s3empty-inexisting
 
 printf "\n\n========================================\n"
-echo "Run command with configuration template file:"
-echo "s3empty --conf-file s3empty-conf.yaml.j2"
-STUDIO_ID=studio s3empty --conf-file s3empty-conf.yaml.j2
+echo "Run command with inexisting bucket being allowed:"
+echo "s3empty --bucket-name studio-s3empty-inexisting --allow-inexisting"
+s3empty --bucket-name studio-s3empty-inexisting --allow-inexisting
 
 printf "\n\n========================================\n"
-echo "Run command with combination of bucket and configuration file:"
-echo "s3empty --bucket-name studio-s3empty-with-versioning --conf-file s3empty-conf.yaml"
-s3empty --bucket-name studio-s3empty-with-versioning --conf-file s3empty-conf.yaml
+echo "Run command with configuration file containing inexisting buckets:"
+echo "s3empty --conf-file s3empty-conf-inexisting.yaml --allow-inexisting"
+s3empty --conf-file s3empty-conf-inexisting.yaml --allow-inexisting
+
+
+# printf "\n\n========================================\n"
+# echo "Run command with configuration file:"
+# echo "s3empty --conf-file s3empty-conf.yaml"
+# s3empty --conf-file s3empty-conf.yaml
+
+# printf "\n\n========================================\n"
+# echo "Run command with configuration template file:"
+# echo "s3empty --conf-file s3empty-conf.yaml.j2"
+# STUDIO_ID=studio s3empty --conf-file s3empty-conf.yaml.j2
+
+# printf "\n\n========================================\n"
+# echo "Run command with combination of bucket and configuration file:"
+# echo "s3empty --bucket-name studio-s3empty-with-versioning --conf-file s3empty-conf.yaml"
+# s3empty --bucket-name studio-s3empty-with-versioning --conf-file s3empty-conf.yaml

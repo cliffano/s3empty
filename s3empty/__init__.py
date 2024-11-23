@@ -5,11 +5,15 @@ s3empty
 Empty an AWS S3 bucket, versioned, not versioned, anything.
 """
 import boto3
+from botocore.exceptions import ClientError
 import click
 from cfgrw import CFGRW
 from .logger import init
 
-def empty_s3(bucket_name: str, conf_file: str) -> None:
+def empty_s3(
+        bucket_name: str = None,
+        conf_file: str = None,
+        allow_inexisting: bool = False) -> None:
     """Process the bucket names to be emptied."""
 
     logger = init()
@@ -31,7 +35,13 @@ def empty_s3(bucket_name: str, conf_file: str) -> None:
     else:
         logger.info(f'Buckets to be emptied: {", ".join(bucket_names)}')
         for _bucket_name in bucket_names:
-            _empty_s3_bucket(logger, s3, _bucket_name)
+            try:
+                _empty_s3_bucket(logger, s3, _bucket_name)
+            except ClientError as e:
+                if allow_inexisting is True and e.response['Error']['Code'] == 'NoSuchBucket':
+                    logger.warning(f'Bucket {_bucket_name} does not exist')
+                else:
+                    raise
 
 def _empty_s3_bucket(logger: object, s3: object, bucket_name: str) -> None:
     """Empty all objects within an S3 bucket."""
@@ -92,7 +102,9 @@ def _log_error_items(logger, error_items: list) -> None:
               help='S3 bucket name to be emptied')
 @click.option('--conf-file', required=False, show_default=True, type=str,
               help='Configuration file containing S3 bucket names to be emptied')
-def cli(bucket_name: str, conf_file: str) -> None:
+@click.option('--allow-inexisting', is_flag=True, required=False, show_default=True, type=bool,
+              help='Allow inexisting buckets')
+def cli(bucket_name: str, conf_file: str, allow_inexisting: bool) -> None:
     """Python CLI for convenient emptying of S3 bucket
     """
-    empty_s3(bucket_name, conf_file)
+    empty_s3(bucket_name, conf_file, allow_inexisting)
