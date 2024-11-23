@@ -4,7 +4,7 @@
 ################################################################
 
 # PieMaker's version number
-PIEMAKER_VERSION = 1.4.1-pre.0
+PIEMAKER_VERSION = 1.5.0
 
 ################################################################
 # User configuration variables
@@ -69,7 +69,7 @@ update-to-version:
 # Formatting targets
 
 style:
-	black $(PACKAGE_NAME) tests
+	black $(PACKAGE_NAME) tests tests-integration examples
 
 ################################################################
 # Testing targets
