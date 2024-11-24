@@ -96,6 +96,13 @@ Here's an IAM policy with minimum permissions required by S3Empty:
 }
 ```
 
+FAQ
+---
+
+Q: How about using [S3 Lifecycle](https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lifecycle-mgmt.html) to delete objects in the bucket?
+
+A: S3 Lifecycle modifies the state of the S3 bucket by adding the lifecycle configuration, while S3Empty does aims to only modify the S3 objects without modifying the S3 bucket itself. Besides that, S3 Lifecycle has an [expiration delay](https://docs.aws.amazon.com/AmazonS3/latest/userguide/how-to-set-lifecycle-configuration-intro.html#lifecycle-considerations) which means, and I quote, "Amazon S3 might not actually delete these objects until days or even weeks later". With S3Empty, the aim is to delete the objects immediately.
+
 Colophon
 --------
 
