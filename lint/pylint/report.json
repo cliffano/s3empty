@@ -80,11 +80,11 @@
         "fatal": 0,
         "info": 0,
         "refactor": 0,
-        "statement": 37,
+        "statement": 59,
         "warning": 0
       }
     },
-    "statement": 316,
+    "statement": 338,
     "error": 0,
     "warning": 0,
     "refactor": 0,
