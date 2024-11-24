@@ -33,6 +33,10 @@ Run S3Empty with a configuration file containing the bucket names:
 
     s3empty --conf-file path/to/some-conf-file.yaml
 
+By default, S3Empty will raise an error if the bucket does not exist. However, there will be scenarios where the S3 bucket you want to empty does not exist or no longer exists. You can use the `--allow-inexisting` flag to allow inexisting buckets and S3Empty will display a warning message and exits without raising any error:
+
+    s3empty --bucket-name some-bucket --allow-inexisting
+
 Show help guide:
 
     s3empty --help
