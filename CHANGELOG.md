@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
-- Add --allow-inexisting flag to allow inexisting buckets
+- Add --allow-inexisting flag to allow inexisting buckets #1
 
 ### Changed
 - Upgrade PieMaker to 1.5.0
