@@ -22,18 +22,18 @@ classifiers = [
   "Operating System :: OS Independent"
 ]
 
-  [[tool.poetry.packages]]
-  include = "s3empty"
+[[tool.poetry.packages]]
+include = "s3empty"
 
-  [tool.poetry.scripts]
-  s3empty = "s3empty:cli"
+[tool.poetry.scripts]
+s3empty = "s3empty:cli"
 
-  [tool.poetry.dependencies]
-  python = "^3.10"
-  boto3 = "^1.35.6"
-  cfgrw = "^0.10.1"
-  click = "^8.1.7"
-  conflog = "^2.0.1"
+[tool.poetry.dependencies]
+python = "^3.10"
+boto3 = "^1.35.6"
+cfgrw = "^0.10.1"
+click = "^8.1.7"
+conflog = "^2.0.1"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.10.0"
@@ -41,6 +41,7 @@ twine = "^5.1.1"
 wheel = "^0.44.0"
 
 [tool.poetry.group.test.dependencies]
+aws-assume-role-lib = "^2.10.0"
 coverage = "^7.6.4"
 moto = "^5.0.21"
 numpy = "1.26.4"
