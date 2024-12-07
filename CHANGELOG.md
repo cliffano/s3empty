@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+- Use printf to display command description on examples
+
 ## 1.2.0 - 2024-11-24
 ### Added
 - Add --allow-inexisting flag to allow inexisting buckets [#1]
