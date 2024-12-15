@@ -4,7 +4,7 @@
 ################################################################
 
 # PieMaker's version number
-PIEMAKER_VERSION = 1.5.0
+PIEMAKER_VERSION = 1.7.0
 
 ################################################################
 # User configuration variables
@@ -34,6 +34,7 @@ export PATH := ${VIRTUAL_ENV}/bin:${POETRY_HOME}/bin:$(PATH)
 # Base targets
 
 # CI target to be executed by CI/CD tool
+all:ci
 ci: clean deps style lint test coverage complexity doc package reinstall test-integration
 
 # Ensure stage directory exists
@@ -57,8 +58,12 @@ deps-extra-apt:
 	apt-get update
 	apt-get install -y python3-venv
 
-# Update Makefile to the latest version on origin's main branch
-update-to-latest:
+# Update Makefile to the latest version tag
+update-to-latest: TARGET_PIEMAKER_VERSION = $(shell curl -s https://api.github.com/repos/cliffano/piemaker/tags | jq -r '.[0].name')
+update-to-latest: update-to-version
+
+# Update Makefile to the main branch
+update-to-main:
 	curl https://raw.githubusercontent.com/cliffano/piemaker/main/src/Makefile-piemaker -o Makefile
 
 # Update Makefile to the version defined in TARGET_PIEMAKER_VERSION parameter
@@ -98,7 +103,7 @@ test-integration:
 test-examples:
 	cd examples && \
 	for f in *.sh; do \
-	  bash "$$f"; \
+	  bash -x "$$f"; \
 	done
 
 coverage:
@@ -152,4 +157,4 @@ doc: stage
 
 ################################################################
 
-.PHONY: all ci clean stage deps deps-upgrade deps-extra doc release lint complexity test test-integration test-examples coverage install install-wheel uninstall reinstall package publish
+.PHONY: all ci clean complexity configurations coverage deps deps-extra-apt deps-upgrade doc export export export install install-wheel lint name package package publish reinstall release-major release-minor release-patch stage style test test-examples test-integration uninstall update-to-latest update-to-latest update-to-main update-to-version
