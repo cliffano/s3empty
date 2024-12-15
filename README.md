@@ -9,9 +9,9 @@
 S3Empty
 --------
 
-S3Empty is a Python CLI for conveniently emptying an AWS S3 bucket.
+S3Empty is a Python CLI for conveniently emptying an AWS S3 bucket. It handles versioned and non-versioned S3 buckets.
 
-This tool is useful when you want to delete all objects in a bucket before deleting the bucket itself. It handles versioned and non-versioned S3 buckets.
+This tool is useful when you want to delete all objects in a bucket before deleting the bucket itself, in order to address this error:
 
     BucketNotEmpty: The bucket you tried to delete is not empty. You must delete all versions in the bucket.
 
@@ -101,7 +101,7 @@ FAQ
 
 Q: How about using [S3 Lifecycle](https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lifecycle-mgmt.html) to delete objects in the bucket?
 
-A: S3 Lifecycle modifies the state of the S3 bucket by adding the lifecycle configuration, while S3Empty aims to only modify the S3 objects without modifying the S3 bucket itself. Besides that, S3 Lifecycle has an [expiration delay](https://docs.aws.amazon.com/AmazonS3/latest/userguide/how-to-set-lifecycle-configuration-intro.html#lifecycle-considerations) which means, and I quote, "Amazon S3 might not actually delete these objects until days or even weeks later". With S3Empty, the aim is to delete the objects immediately.
+A: S3 Lifecycle modifies the state of the S3 bucket by adding the lifecycle configuration. However, S3Empty aims to only modify the S3 objects without modifying the S3 bucket itself. Other than that, S3 Lifecycle has an [expiration delay](https://docs.aws.amazon.com/AmazonS3/latest/userguide/how-to-set-lifecycle-configuration-intro.html#lifecycle-considerations) which means, and I quote, "Amazon S3 might not actually delete these objects until days or even weeks later." S3Empty aims to start deleting the objects immediately.
 
 Colophon
 --------
