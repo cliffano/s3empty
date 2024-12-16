@@ -285,7 +285,7 @@ class TestS3Empty(unittest.TestCase):
         assert result.output == ""
 
         # should delegate call to apply
-        func_empty_s3.assert_called_once_with("some-bucket", None, False)
+        func_empty_s3.assert_called_once_with("some-bucket", None, False, "info")
 
     @patch("boto3.resource")
     @patch("s3empty.init")
@@ -435,3 +435,21 @@ class TestS3Empty(unittest.TestCase):
 
         self.assertEqual(mock_bucket_object_versions.delete.call_count, 1)
         mock_bucket_object_versions.delete.assert_has_calls([call()])
+
+    @patch("s3empty.empty_s3")
+    def test_cli_with_log_level(
+        self, func_empty_s3
+    ):  # pylint: disable=too-many-arguments
+
+        func_empty_s3.return_value = None
+
+        runner = CliRunner()
+        result = runner.invoke(
+            cli, ["--bucket-name", "some-bucket", "--log-level", "debug"]
+        )
+        assert not result.exception
+        assert result.exit_code == 0
+        assert result.output == ""
+
+        # should delegate call to apply
+        func_empty_s3.assert_called_once_with("some-bucket", None, False, "debug")

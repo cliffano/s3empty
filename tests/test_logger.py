@@ -8,5 +8,5 @@ class TesLogger(unittest.TestCase):
 
     def test_init(self):
 
-        logger = init()
+        logger = init("info")
         assert isinstance(logger, logging.LoggerAdapter) is True

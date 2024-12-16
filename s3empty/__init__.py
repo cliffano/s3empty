@@ -12,11 +12,14 @@ from .logger import init
 
 
 def empty_s3(
-    bucket_name: str = None, conf_file: str = None, allow_inexisting: bool = False
+    bucket_name: str = None,
+    conf_file: str = None,
+    allow_inexisting: bool = False,
+    log_level: str = "info",
 ) -> None:
     """Process the bucket names to be emptied."""
 
-    logger = init()
+    logger = init(log_level)
     s3 = boto3.resource("s3")
 
     bucket_names = []
@@ -116,6 +119,7 @@ def _log_error_items(logger, error_items: list) -> None:
     "--bucket-name",
     required=False,
     show_default=True,
+    default=None,
     type=str,
     help="S3 bucket name to be emptied",
 )
@@ -123,6 +127,7 @@ def _log_error_items(logger, error_items: list) -> None:
     "--conf-file",
     required=False,
     show_default=True,
+    default=None,
     type=str,
     help="Configuration file containing S3 bucket names to be emptied",
 )
@@ -131,9 +136,20 @@ def _log_error_items(logger, error_items: list) -> None:
     is_flag=True,
     required=False,
     show_default=True,
+    default=False,
     type=bool,
     help="Allow inexisting buckets",
 )
-def cli(bucket_name: str, conf_file: str, allow_inexisting: bool) -> None:
+@click.option(
+    "--log-level",
+    required=False,
+    show_default=True,
+    default="info",
+    type=str,
+    help="Log level: debug, info, warning, error, critical",
+)
+def cli(
+    bucket_name: str, conf_file: str, allow_inexisting: bool, log_level: str
+) -> None:
     """Python CLI for convenient emptying of S3 bucket"""
-    empty_s3(bucket_name, conf_file, allow_inexisting)
+    empty_s3(bucket_name, conf_file, allow_inexisting, log_level)

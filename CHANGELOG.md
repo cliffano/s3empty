@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- Add --log-level flag to set custom log level
+
 ### Changed
 - Use printf to display command description on examples
 - Upgrade PieMaker to 1.7.0

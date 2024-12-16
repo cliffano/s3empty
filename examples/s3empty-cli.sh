@@ -58,3 +58,7 @@ STUDIO_ID=studio s3empty --conf-file s3empty-conf.yaml.j2
 printf "\n\n========================================\n"
 printf "Run command with combination of bucket and configuration file:\n"
 s3empty --bucket-name studio-s3empty-with-versioning --conf-file s3empty-conf.yaml
+
+printf "\n\n========================================\n"
+printf "Run command with debug log level:\n"
+s3empty --conf-file s3empty-conf.yaml --log-level debug
