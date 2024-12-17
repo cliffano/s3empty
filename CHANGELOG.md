@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Fix missing aws-assume-role-lib for examples assume role
+- Fix dependencies status badge link
 
 ## 1.2.0 - 2024-11-24
 ### Added

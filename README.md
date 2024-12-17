@@ -2,12 +2,12 @@
 
 [![Build Status](https://github.com/cliffano/s3empty/workflows/CI/badge.svg)](https://github.com/cliffano/s3empty/actions?query=workflow%3ACI)
 [![Security Status](https://snyk.io/test/github/cliffano/s3empty/badge.svg)](https://snyk.io/test/github/cliffano/s3empty)
-[![Dependencies Status](https://img.shields.io/librariesio/release/pypi/s3empty)](https://libraries.io/github/cliffano/s3empty)
+[![Dependencies Status](https://img.shields.io/librariesio/release/pypi/s3empty)](https://libraries.io/pypi/s3empty)
 [![Published Version](https://img.shields.io/pypi/v/s3empty.svg)](https://pypi.python.org/pypi/s3empty)
 <br/>
 
 S3Empty
---------
+-------
 
 S3Empty is a Python CLI for conveniently emptying an AWS S3 bucket. It handles versioned and non-versioned S3 buckets.
 
