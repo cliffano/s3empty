@@ -6,7 +6,7 @@ printf "Show help guide:\n"
 s3empty --help
 
 printf "\n\n========================================\n"
-printf "Run command with default config file:\n"
+printf "Run command with no arg:\n"
 s3empty
 
 printf "\n\n========================================\n"
