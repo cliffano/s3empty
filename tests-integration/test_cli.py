@@ -159,6 +159,31 @@ class TestCli(unittest.TestCase):
         )
 
     @mock_aws
+    def test_cli_with_inexisting_bucket(self):
+        runner = CliRunner()
+        result = runner.invoke(cli, ["--bucket-name", "some-inexisting-bucket"])
+
+        self.assertNotEqual(result.exit_code, 0)
+        self.assertIn(
+            "[s3empty] INFO Buckets to be emptied: some-inexisting-bucket",
+            result.output,
+        )
+
+    @mock_aws
+    def test_cli_with_inexisting_bucket_being_allowed(self):
+        runner = CliRunner()
+        result = runner.invoke(
+            cli, ["--bucket-name", "some-inexisting-bucket", "--allow-inexisting"]
+        )
+
+        self.assertEqual(result.exit_code, 0)
+        self.assertIn(
+            "[s3empty] WARNING Bucket some-inexisting-bucket does not exist",
+            result.output,
+        )
+
+
+    @mock_aws
     @patch("s3empty.CFGRW.read", return_value={"bucket_names": ["some-bucket"]})
     def test_cli_with_conf_file(self, mock_read):  # pylint: disable=unused-argument
         s3 = boto3.resource("s3")
@@ -193,28 +218,89 @@ class TestCli(unittest.TestCase):
         self.assertEqual(len(objects), 0)
 
     @mock_aws
-    def test_cli_with_inexisting_bucket(self):
-        runner = CliRunner()
-        result = runner.invoke(cli, ["--bucket-name", "some-inexisting-bucket"])
+    @patch('s3empty.CFGRW.read', return_value={'bucket_names': ['some-bucket']})
+    def test_cli_with_conf_template_file(self, mock_read):
+        s3 = boto3.resource("s3")
+        s3.create_bucket(Bucket="some-bucket")
 
-        self.assertNotEqual(result.exit_code, 0)
-        self.assertIn(
-            "[s3empty] INFO Buckets to be emptied: some-inexisting-bucket",
-            result.output,
-        )
+        s3.Bucket("some-bucket").put_object(Key="some-key1", Body="some-message1")
+        s3.Bucket("some-bucket").put_object(Key="some-key2", Body="some-message2")
 
-    @mock_aws
-    def test_cli_with_inexisting_bucket_being_allowed(self):
         runner = CliRunner()
-        result = runner.invoke(
-            cli, ["--bucket-name", "some-inexisting-bucket", "--allow-inexisting"]
-        )
+        result = runner.invoke(cli, ["--conf-file", "some-s3empty.yaml.j2"])
 
         self.assertEqual(result.exit_code, 0)
         self.assertIn(
-            "[s3empty] WARNING Bucket some-inexisting-bucket does not exist",
+            "[s3empty] INFO Reading configuration file some-s3empty.yaml.j2", result.output
+        )
+        self.assertIn(
+            "[s3empty] INFO Buckets to be emptied: some-bucket", result.output
+        )
+        self.assertIn(
+            "[s3empty] INFO Emptying all objects in bucket some-bucket...",
             result.output,
         )
+        self.assertIn("[s3empty] INFO Deleted some-key1", result.output)
+        self.assertIn("[s3empty] INFO Deleted some-key2", result.output)
+        self.assertIn(
+            "[s3empty] INFO Successfully emptied all objects in bucket some-bucket",
+            result.output,
+        )
+
+        bucket = s3.Bucket("some-bucket")
+        objects = list(bucket.objects.all())
+        self.assertEqual(len(objects), 0)
+
+    @mock_aws
+    @patch('s3empty.CFGRW.read', return_value={'bucket_names': ['some-bucket2']})
+    def test_cli_with_bucket_and_conf_file(self, mock_read):
+        s3 = boto3.resource("s3")
+        s3.create_bucket(Bucket="some-bucket1")
+        s3.create_bucket(Bucket="some-bucket2")
+
+        s3.Bucket("some-bucket1").put_object(Key="some-key1", Body="some-message1")
+        s3.Bucket("some-bucket1").put_object(Key="some-key2", Body="some-message2")
+        s3.Bucket("some-bucket2").put_object(Key="some-key3", Body="some-message3")
+        s3.Bucket("some-bucket2").put_object(Key="some-key4", Body="some-message4")
+
+        runner = CliRunner()
+        result = runner.invoke(cli, ["--bucket-name", "some-bucket1", "--conf-file", "s3empty-conf.yaml"])
+
+        self.assertEqual(result.exit_code, 0)
+        self.assertIn(
+            "[s3empty] INFO Reading configuration file s3empty-conf.yaml", result.output
+        )
+        self.assertIn(
+            "[s3empty] INFO Buckets to be emptied: some-bucket1, some-bucket2", result.output
+        )
+        self.assertIn(
+            "[s3empty] INFO Emptying all objects in bucket some-bucket1...",
+            result.output,
+        )
+        self.assertIn("[s3empty] INFO Deleted some-key1", result.output)
+        self.assertIn("[s3empty] INFO Deleted some-key2", result.output)
+        self.assertIn(
+            "[s3empty] INFO Successfully emptied all objects in bucket some-bucket1",
+            result.output,
+        )
+        self.assertIn(
+            "[s3empty] INFO Emptying all objects in bucket some-bucket2...",
+            result.output,
+        )
+        self.assertIn("[s3empty] INFO Deleted some-key3", result.output)
+        self.assertIn("[s3empty] INFO Deleted some-key4", result.output)
+        self.assertIn(
+            "[s3empty] INFO Successfully emptied all objects in bucket some-bucket2",
+            result.output,
+        )
+
+        bucket1 = s3.Bucket("some-bucket1")
+        objects1 = list(bucket1.objects.all())
+        self.assertEqual(len(objects1), 0)
+
+        bucket2 = s3.Bucket("some-bucket2")
+        objects2 = list(bucket2.objects.all())
+        self.assertEqual(len(objects2), 0)
 
     @mock_aws
     @patch("s3empty.CFGRW.read", return_value={"bucket_names": ["some-bucket"]})
