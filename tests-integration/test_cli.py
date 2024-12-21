@@ -160,9 +160,7 @@ class TestCli(unittest.TestCase):
 
     @mock_aws
     @patch("s3empty.CFGRW.read", return_value={"bucket_names": ["some-bucket"]})
-    def test_cli_with_conf_file(
-        self, mock_read
-    ):  # pylint: disable=unused-argument
+    def test_cli_with_conf_file(self, mock_read):  # pylint: disable=unused-argument
         s3 = boto3.resource("s3")
         s3.create_bucket(Bucket="some-bucket")
 
@@ -197,9 +195,7 @@ class TestCli(unittest.TestCase):
     @mock_aws
     def test_cli_with_inexisting_bucket(self):
         runner = CliRunner()
-        result = runner.invoke(
-            cli, ["--bucket-name", "some-inexisting-bucket"]
-        )
+        result = runner.invoke(cli, ["--bucket-name", "some-inexisting-bucket"])
 
         self.assertNotEqual(result.exit_code, 0)
         self.assertIn(
@@ -232,7 +228,9 @@ class TestCli(unittest.TestCase):
         s3.Bucket("some-bucket").put_object(Key="some-key2", Body="some-message2")
 
         runner = CliRunner()
-        result = runner.invoke(cli, ["--conf-file", "some-s3empty.yaml", "--log-level", "warning"])
+        result = runner.invoke(
+            cli, ["--conf-file", "some-s3empty.yaml", "--log-level", "warning"]
+        )
 
         self.assertEqual(result.exit_code, 0)
         self.assertNotIn(
