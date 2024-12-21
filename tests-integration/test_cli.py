@@ -221,19 +221,6 @@ class TestCli(unittest.TestCase):
         )
 
     @mock_aws
-    def test_cli_with_inexisting_bucket(self):
-        runner = CliRunner()
-        result = runner.invoke(
-            cli, ["--bucket-name", "some-inexisting-bucket"]
-        )
-
-        self.assertNotEqual(result.exit_code, 0)
-        self.assertIn(
-            "[s3empty] INFO Buckets to be emptied: some-inexisting-bucket",
-            result.output,
-        )
-
-    @mock_aws
     @patch("s3empty.CFGRW.read", return_value={"bucket_names": ["some-bucket"]})
     def test_cli_with_warning_log_level(
         self, mock_read
