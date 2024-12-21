@@ -149,17 +149,17 @@ uvloop = ["uvloop (>=0.15.2)"]
 
 [[package]]
 name = "boto3"
-version = "1.35.84"
+version = "1.35.86"
 description = "The AWS SDK for Python"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "boto3-1.35.84-py3-none-any.whl", hash = "sha256:c94fc8023caf952f8740a48fc400521bba167f883cfa547d985c05fda7223f7a"},
-    {file = "boto3-1.35.84.tar.gz", hash = "sha256:9f9bf72d92f7fdd546b974ffa45fa6715b9af7f5c00463e9d0f6ef9c95efe0c2"},
+    {file = "boto3-1.35.86-py3-none-any.whl", hash = "sha256:ed59fb4883da167464a5dfbc96e76d571db75e1a7a27d8e7b790c3008b02fcc7"},
+    {file = "boto3-1.35.86.tar.gz", hash = "sha256:d61476fdd5a5388503b72c897083310d2329ce088593c4332b571a860be5d155"},
 ]
 
 [package.dependencies]
-botocore = ">=1.35.84,<1.36.0"
+botocore = ">=1.35.86,<1.36.0"
 jmespath = ">=0.7.1,<2.0.0"
 s3transfer = ">=0.10.0,<0.11.0"
 
@@ -168,13 +168,13 @@ crt = ["botocore[crt] (>=1.21.0,<2.0a0)"]
 
 [[package]]
 name = "botocore"
-version = "1.35.84"
+version = "1.35.86"
 description = "Low-level, data-driven core of boto 3."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "botocore-1.35.84-py3-none-any.whl", hash = "sha256:b4dc2ac7f54ba959429e1debbd6c7c2fb2349baa1cd63803f0682f0773dbd077"},
-    {file = "botocore-1.35.84.tar.gz", hash = "sha256:f86754882e04683e2e99a6a23377d0dd7f1fc2b2242844b2381dbe4dcd639301"},
+    {file = "botocore-1.35.86-py3-none-any.whl", hash = "sha256:77cb4b445e4f424f956c68c688bd3ad527f4d214d51d67ffc8e245f4476d7de0"},
+    {file = "botocore-1.35.86.tar.gz", hash = "sha256:951e944eb30284b4593d4da98f70f7b5292ea237e4de0c5a2852946a549b8347"},
 ]
 
 [package.dependencies]
@@ -827,13 +827,13 @@ trio = ["async_generator", "trio"]
 
 [[package]]
 name = "jinja2"
-version = "3.1.2"
+version = "3.1.4"
 description = "A very fast and expressive template engine."
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "Jinja2-3.1.2-py3-none-any.whl", hash = "sha256:6088930bfe239f0e6710546ab9c19c9ef35e29792895fed6e6e31a023a182a61"},
-    {file = "Jinja2-3.1.2.tar.gz", hash = "sha256:31351a702a408a9e7595a8fc6150fc3f43bb6bf7e319770cbc0db9df9437e852"},
+    {file = "jinja2-3.1.4-py3-none-any.whl", hash = "sha256:bc5dd2abb727a5319567b7a813e6a2e7318c39f4f487cfe6c89c6f9c7d25197d"},
+    {file = "jinja2-3.1.4.tar.gz", hash = "sha256:4a3aee7acbbe7303aede8e9648d13b8bf88a429282aa6122a993f0ac800cb369"},
 ]
 
 [package.dependencies]
@@ -1432,24 +1432,25 @@ testutils = ["gitpython (>3)"]
 
 [[package]]
 name = "pylint-report"
-version = "2.4.0"
+version = "2.4.1"
 description = "Generates an html report summarizing the results of pylint."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "pylint_report-2.4.0-py3-none-any.whl", hash = "sha256:ff81d52ea818258d5539805dff1d409f82464b958c4dd30d2fa2c4bf5a6c3d62"},
-    {file = "pylint_report-2.4.0.tar.gz", hash = "sha256:cd13c8500b1eac95fe6523da2c53f8a10fd63514f46bcf36a6b55b15c0efaecd"},
+    {file = "pylint_report-2.4.1-py3-none-any.whl", hash = "sha256:2dbf2c1224f0cc26dd88f5182f802dd32297efa4fada15c04ca9aac3d95e298e"},
+    {file = "pylint_report-2.4.1.tar.gz", hash = "sha256:c6aca0177953472d17e7d928ab2387a85c762e6606641d4316ea5c7589f777f1"},
 ]
 
 [package.dependencies]
 argcomplete = "*"
-Jinja2 = "3.1.2"
+Jinja2 = "3.1.4"
+numpy = "1.26.4"
 pandas = "1.5.2"
 pylint = "*"
 
 [package.extras]
 code = ["black", "isort", "pre-commit"]
-dev = ["pylint-report[code,docs,test]"]
+dev = ["pylint_report[code,docs,test]"]
 docs = ["Sphinx", "furo", "sphinx-argparse", "sphinx-copybutton", "sphinx-inline-tabs", "sphinx-rtd-theme", "sphinxcontrib-jsmath", "sphinxcontrib-websupport"]
 test = ["coverage", "pytest", "pytest-html", "pytest-reportlog"]
 
