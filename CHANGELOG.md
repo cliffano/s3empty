@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+- Upgrade deps to latest versions
+- Upgrade GH Actions to latest versions
+
 ## 1.3.0 - 2024-12-21
 ### Added
 - Add --log-level flag to set custom log level
