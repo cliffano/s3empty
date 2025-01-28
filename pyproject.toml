@@ -30,7 +30,7 @@ s3empty = "s3empty:cli"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-boto3 = "^1.36.6"
+boto3 = "^1.36.7"
 cfgrw = "^0.10.1"
 click = "^8.1.8"
 conflog = "^2.0.1"
