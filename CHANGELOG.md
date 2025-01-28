@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- Add upgrade-deps GH Actions workflow
+
 ### Changed
 - Upgrade deps to latest versions
 - Upgrade GH Actions to latest versions
