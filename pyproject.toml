@@ -30,22 +30,22 @@ s3empty = "s3empty:cli"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-boto3 = "^1.36.7"
+boto3 = "^1.36.19"
 cfgrw = "^0.10.1"
 click = "^8.1.8"
 conflog = "^2.0.1"
 
 [tool.poetry.group.dev.dependencies]
-black = "^24.10.0"
+black = "^25.1.0"
 twine = "^6.1.0"
 wheel = "^0.45.1"
 
 [tool.poetry.group.test.dependencies]
 aws-assume-role-lib = "^2.10.0"
-coverage = "^7.6.10"
-moto = "^5.0.27"
+coverage = "^7.6.12"
+moto = "^5.0.28"
 numpy = "1.26.4"
-pylint = "^3.3.3"
+pylint = "^3.3.4"
 pytest = "^8.3.4"
 wily = "^1.25.0"
 
