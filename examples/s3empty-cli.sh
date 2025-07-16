@@ -6,6 +6,10 @@ printf "Show help guide:\n"
 s3empty --help
 
 printf "\n\n========================================\n"
+printf "Show version info: s3empty --version\n"
+s3empty --version
+
+printf "\n\n========================================\n"
 printf "Run command with no arg:\n"
 s3empty
 

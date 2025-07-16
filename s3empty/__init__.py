@@ -14,6 +14,7 @@ from .logger import init
 def empty_s3(
     bucket_name: str = None,
     conf_file: str = None,
+    batch_size: int = 0,
     allow_inexisting: bool = False,
     log_level: str = "info",
 ) -> None:
@@ -39,7 +40,7 @@ def empty_s3(
         logger.info(f'Buckets to be emptied: {", ".join(bucket_names)}')
         for _bucket_name in bucket_names:
             try:
-                _empty_s3_bucket(logger, s3, _bucket_name)
+                _empty_s3_bucket(logger, s3, _bucket_name, batch_size)
             except ClientError as e:
                 if (
                     allow_inexisting is True
@@ -50,13 +51,21 @@ def empty_s3(
                     raise
 
 
-def _empty_s3_bucket(logger: object, s3: object, bucket_name: str) -> None:
+def _empty_s3_bucket(
+    logger: object, s3: object, bucket_name: str, batch_size: int
+) -> None:
     """Empty all objects within an S3 bucket."""
 
     s3_bucket = s3.Bucket(bucket_name)
     bucket_versioning = s3.BucketVersioning(bucket_name)
 
-    if bucket_versioning.status == "Enabled":
+    if batch_size > 0:
+        logger.info(
+            f"Emptying objects and versions in bucket {bucket_name} "
+            f"in batches of {batch_size} objects"
+        )
+        _delete_in_batches(logger, s3, bucket_name, batch_size)
+    elif bucket_versioning.status == "Enabled":
         logger.info(f"Emptying all objects and versions in bucket {bucket_name}...")
         response = s3_bucket.object_versions.delete()
         success_message = (
@@ -67,6 +76,30 @@ def _empty_s3_bucket(logger: object, s3: object, bucket_name: str) -> None:
         logger.info(f"Emptying all objects in bucket {bucket_name}...")
         response = s3_bucket.objects.all().delete()
         success_message = f"Successfully emptied all objects in bucket {bucket_name}"
+        _handle_response(logger, response, success_message)
+
+
+def _delete_in_batches(
+    logger: object, s3: object, bucket_name: str, batch_size: int
+) -> None:
+    """Delete objects in batches."""
+    paginator = s3.get_paginator("list_object_versions")
+    page_iterator = paginator.paginate(
+        Bucket=bucket_name, PaginationConfig={"PageSize": batch_size}
+    )
+    for page in page_iterator:
+        batch = []
+        versions = page.get("Versions", [])
+        delete_markers = page.get("DeleteMarkers", [])
+        for item in versions + delete_markers:
+            batch.append({"Key": item["Key"], "VersionId": item["VersionId"]})
+            logger.debug(
+                f"Adding {item['Key']} {item['VersionId']} to batch for deletion..."
+            )
+        response = s3.delete_objects(Bucket=bucket_name, Delete={"Objects": batch})
+        success_message = (
+            f"Successfully delete {len(batch)} objects/versions in bucket {bucket_name}"
+        )
         _handle_response(logger, response, success_message)
 
 
@@ -132,6 +165,14 @@ def _log_error_items(logger, error_items: list) -> None:
     help="Configuration file containing S3 bucket names to be emptied",
 )
 @click.option(
+    "--batch-size",
+    required=False,
+    show_default=True,
+    default=0,
+    type=int,
+    help="Delete objects and versions in batches of this size",
+)
+@click.option(
     "--allow-inexisting",
     is_flag=True,
     required=False,
@@ -148,8 +189,13 @@ def _log_error_items(logger, error_items: list) -> None:
     type=str,
     help="Log level: debug, info, warning, error, critical",
 )
+@click.version_option(package_name="s3empty", prog_name="s3empty")
 def cli(
-    bucket_name: str, conf_file: str, allow_inexisting: bool, log_level: str
+    bucket_name: str,
+    conf_file: str,
+    batch_size: int,
+    allow_inexisting: bool,
+    log_level: str,
 ) -> None:
     """Python CLI for convenient emptying of S3 bucket"""
-    empty_s3(bucket_name, conf_file, allow_inexisting, log_level)
+    empty_s3(bucket_name, conf_file, batch_size, allow_inexisting, log_level)

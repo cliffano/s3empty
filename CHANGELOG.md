@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add upgrade-deps GH Actions workflow
 - Add --version flag to show version info
 - Add support for Python 3.11 and 3.13
+- Add --batch-size flag to delete objects/versions in batches
 
 ### Changed
 - Upgrade deps to latest versions
