@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Add upgrade-deps GH Actions workflow
 - Add --version flag to show version info
-- Add support for Python 3.11 and 3.13
+- Add support for Python 3.12 and 3.14
 - Add --batch-size flag to delete objects/versions in batches
 
 ### Changed
