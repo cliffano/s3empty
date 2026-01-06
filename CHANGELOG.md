@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Upgrade deps to latest versions
 - Upgrade GH Actions to latest versions
+- Upgrade PieMaker to 2.0.0
 
 ## 1.3.0 - 2024-12-21
 ### Added

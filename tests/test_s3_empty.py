@@ -457,15 +457,15 @@ class TestS3Empty(unittest.TestCase):
     @patch("s3empty.empty_s3")
     def test_cli_with_batch_size(self, func_empty_s3):
         func_empty_s3.return_value = None
-        
+
         runner = CliRunner()
         result = runner.invoke(
             cli, ["--bucket-name", "some-bucket", "--batch-size", "100"]
         )
-        
+
         assert not result.exception
         assert result.exit_code == 0
         assert result.output == ""
-        
+
         # Verify empty_s3 was called with correct batch_size
         func_empty_s3.assert_called_once_with("some-bucket", None, 100, False, "info")

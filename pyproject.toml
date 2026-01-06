@@ -30,26 +30,25 @@ s3empty = "s3empty:cli"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-boto3 = "^1.36.19"
-cfgrw = "^0.10.1"
-click = "^8.1.8"
-conflog = "^2.0.1"
+boto3 = "~1.42.22"
+cfgrw = "~1.0.0"
+click = "~8.3.1"
+conflog = "~2.1.0"
 
 [tool.poetry.group.dev.dependencies]
-black = "^25.1.0"
-twine = "^6.1.0"
-wheel = "^0.45.1"
+black = "~25.12.0"
+twine = "~6.2.0"
+wheel = "~0.45.1"
 
 [tool.poetry.group.test.dependencies]
-aws-assume-role-lib = "^2.10.0"
-coverage = "^7.6.12"
-moto = "^5.0.28"
-numpy = "1.26.4"
-pylint = "^3.3.4"
-pytest = "^8.3.4"
-wily = "^1.25.0"
+coverage = "~7.13.0"
+numpy = "1.26.4" # https://stackoverflow.com/questions/78634235/numpy-dtype-size-changed-may-indicate-binary-incompatibility-expected-96-from
+pylint = "~4.0.4"
+pytest = "~9.0.2"
+radon = "~6.0.1"
 
 [tool.poetry.group.doc.dependencies]
-pylint-report = "^2.4.2"
-pytest-html = "^4.1.1"
-Sphinx = "^8.1.3"
+ansi2html = "~1.9.2"
+pylint-report = "~2.4.2"
+pytest-html = "~4.1.1"
+Sphinx = "8.1.3" # Pinned for Python 3.10 support
