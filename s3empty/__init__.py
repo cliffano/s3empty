@@ -106,9 +106,7 @@ def _delete_in_batches(
         response = s3.meta.client.delete_objects(
             Bucket=bucket_name, Delete={"Objects": batch}
         )
-        success_message = (
-            f"Successfully deleted a batch of {len(batch)} objects/versions in bucket {bucket_name}"
-        )
+        success_message = f"Successfully deleted a batch of {len(batch)} objects/versions in bucket {bucket_name}"
         _handle_response(logger, response, success_message)
 
 
@@ -121,8 +119,12 @@ def _handle_response(logger, response: dict, success_message: str) -> None:
     has_error = False
 
     for response_item in responses:
-        deleted = response_item.get("Deleted", []) if isinstance(response_item, dict) else []
-        errors = response_item.get("Errors", []) if isinstance(response_item, dict) else []
+        deleted = (
+            response_item.get("Deleted", []) if isinstance(response_item, dict) else []
+        )
+        errors = (
+            response_item.get("Errors", []) if isinstance(response_item, dict) else []
+        )
 
         if deleted:
             has_entries = True
