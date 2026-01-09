@@ -106,7 +106,10 @@ def _delete_in_batches(
         response = s3.meta.client.delete_objects(
             Bucket=bucket_name, Delete={"Objects": batch}
         )
-        success_message = f"Successfully deleted a batch of {len(batch)} objects/versions in bucket {bucket_name}"
+        success_message = (
+            f"Successfully deleted a batch of {len(batch)} objects/versions "
+            f"in bucket {bucket_name}"
+        )
         _handle_response(logger, response, success_message)
 
 
