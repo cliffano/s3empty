@@ -62,7 +62,7 @@ def _empty_s3_bucket(
     if batch_size > 0:
         logger.info(
             f"Emptying objects and versions in bucket {bucket_name} "
-            f"in batches of {batch_size} objects"
+            f"in batches of {batch_size}"
         )
         _delete_in_batches(logger, s3, bucket_name, batch_size)
     elif bucket_versioning.status == "Enabled":
@@ -83,42 +83,60 @@ def _delete_in_batches(
     logger: object, s3: object, bucket_name: str, batch_size: int
 ) -> None:
     """Delete objects in batches."""
-    paginator = s3.get_paginator("list_object_versions")
+    paginator = s3.meta.client.get_paginator("list_object_versions")
     page_iterator = paginator.paginate(
         Bucket=bucket_name, PaginationConfig={"PageSize": batch_size}
     )
+
     for page in page_iterator:
         batch = []
         versions = page.get("Versions", [])
         delete_markers = page.get("DeleteMarkers", [])
+
         for item in versions + delete_markers:
             batch.append({"Key": item["Key"], "VersionId": item["VersionId"]})
             logger.debug(
                 f"Adding {item['Key']} {item['VersionId']} to batch for deletion..."
             )
-        response = s3.delete_objects(Bucket=bucket_name, Delete={"Objects": batch})
+
+        if not batch:
+            logger.warn("No objects or delete markers found in this page")
+            continue
+
+        response = s3.meta.client.delete_objects(
+            Bucket=bucket_name, Delete={"Objects": batch}
+        )
         success_message = (
-            f"Successfully delete {len(batch)} objects/versions in bucket {bucket_name}"
+            f"Successfully deleted a batch of {len(batch)} objects/versions in bucket {bucket_name}"
         )
         _handle_response(logger, response, success_message)
 
 
 def _handle_response(logger, response: dict, success_message: str) -> None:
-    if isinstance(response, list) and len(response) >= 1:
-        has_error = False
-        for response_item in response:
-            if "Deleted" in response_item and len(response_item["Deleted"]) >= 1:
-                _log_deleted_items(logger, response_item["Deleted"])
-            if "Errors" in response_item and len(response_item["Errors"]) >= 1:
-                has_error = True
-                _log_error_items(logger, response_item["Errors"])
-        if has_error is False:
-            logger.info(success_message)
-    elif isinstance(response, list) and len(response) == 0:
+    # AWS delete_objects can return a list (paginator path) or a dict (direct client call)
+    # Normalize both shapes to reuse the same logging helpers.
+    responses = response if isinstance(response, list) else [response]
+
+    has_entries = False
+    has_error = False
+
+    for response_item in responses:
+        deleted = response_item.get("Deleted", []) if isinstance(response_item, dict) else []
+        errors = response_item.get("Errors", []) if isinstance(response_item, dict) else []
+
+        if deleted:
+            has_entries = True
+            _log_deleted_items(logger, deleted)
+
+        if errors:
+            has_entries = True
+            has_error = True
+            _log_error_items(logger, errors)
+
+    if has_entries is False:
         logger.info("No objects to delete")
-    else:
-        logger.error("Unexpected response:")
-        logger.error(response)
+    elif has_error is False:
+        logger.info(success_message)
 
 
 def _log_deleted_items(logger, deleted_items: list) -> None:
