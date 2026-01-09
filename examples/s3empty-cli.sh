@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
+# set -o errexit
 set -o nounset
+
+cd ../
+. ./.venv/bin/activate
+cd examples/
 
 printf "\n\n========================================\n"
 printf "Show help guide:\n"
@@ -15,7 +20,7 @@ s3empty
 
 printf "\n\n========================================\n"
 printf "Run command without permission:\n"
-AWS_PROFILE=studio-tester s3empty --bucket-name some-bucket
+AWS_PROFILE=studio-tester s3empty --bucket-name some-bucket 
 
 printf "\n\n****************************************\n"
 printf "Assume studio-s3empty role:\n"
@@ -66,3 +71,7 @@ s3empty --bucket-name studio-s3empty-with-versioning --conf-file s3empty-conf.ya
 printf "\n\n========================================\n"
 printf "Run command with debug log level:\n"
 s3empty --conf-file s3empty-conf.yaml --log-level debug
+
+printf "\n\n========================================\n"
+printf "Run command with bucket having versioning enabled and objects being batch deleted:\n"
+s3empty --conf-file s3empty-conf-batch-deletion.yaml --batch-size 3
