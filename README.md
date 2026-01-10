@@ -1,8 +1,8 @@
 <img align="right" src="https://raw.github.com/cliffano/s3empty/main/avatar.jpg" alt="Avatar"/>
 
 [![Build Status](https://github.com/cliffano/s3empty/workflows/CI/badge.svg)](https://github.com/cliffano/s3empty/actions?query=workflow%3ACI)
-[![Dependencies Status](https://img.shields.io/librariesio/release/pypi/s3empty)](https://libraries.io/pypi/s3empty)
 [![Code Scanning Status](https://github.com/cliffano/s3empty/workflows/CodeQL/badge.svg)](https://github.com/cliffano/s3empty/actions?query=workflow%3ACodeQL)
+[![Dependencies Status](https://img.shields.io/librariesio/release/pypi/s3empty)](https://libraries.io/pypi/s3empty)
 [![Security Status](https://snyk.io/test/github/cliffano/s3empty/badge.svg)](https://snyk.io/test/github/cliffano/s3empty)
 [![Published Version](https://img.shields.io/pypi/v/s3empty.svg)](https://pypi.python.org/pypi/s3empty)
 <br/>
@@ -112,7 +112,7 @@ Colophon
 Build reports:
 
 * [Lint report](https://cliffano.github.io/s3empty/lint/pylint/index.html)
-* [Code complexity report](https://cliffano.github.io/s3empty/complexity/radon/cc.txt)
+* [Code complexity report](https://cliffano.github.io/s3empty/complexity/radon/index.html)
 * [Unit tests report](https://cliffano.github.io/s3empty/test/pytest/index.html)
 * [Test coverage report](https://cliffano.github.io/s3empty/coverage/coverage/index.html)
 * [Integration tests report](https://cliffano.github.io/s3empty/test-integration/pytest/index.html)
