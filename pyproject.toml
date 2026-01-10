@@ -7,7 +7,7 @@ no-binary = [ ":none:" ]
 
 [tool.poetry]
 name = "s3empty"
-version = "1.3.1-pre.0"
+version = "2.0.0"
 description = "Python CLI for convenient emptying of S3 bucket"
 license = "Apache-2.0"
 authors = [ "Cliffano Subagio <cliffano@gmail.com>" ]
@@ -22,18 +22,18 @@ classifiers = [
   "Operating System :: OS Independent"
 ]
 
-[[tool.poetry.packages]]
-include = "s3empty"
+  [[tool.poetry.packages]]
+  include = "s3empty"
 
-[tool.poetry.scripts]
-s3empty = "s3empty:cli"
+  [tool.poetry.scripts]
+  s3empty = "s3empty:cli"
 
-[tool.poetry.dependencies]
-python = "^3.10"
-boto3 = "~1.42.25"
-cfgrw = "~1.0.0"
-click = "~8.3.1"
-conflog = "~2.1.0"
+  [tool.poetry.dependencies]
+  python = "^3.10"
+  boto3 = "~1.42.25"
+  cfgrw = "~1.0.0"
+  click = "~8.3.1"
+  conflog = "~2.1.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "~25.12.0"
@@ -44,7 +44,7 @@ wheel = "~0.45.1"
 aws-assume-role-lib = "~2.10.0"
 coverage = "~7.13.1"
 moto = "~5.1.19"
-numpy = "1.26.4" # https://stackoverflow.com/questions/78634235/numpy-dtype-size-changed-may-indicate-binary-incompatibility-expected-96-from
+numpy = "1.26.4"
 pylint = "~4.0.4"
 pytest = "~9.0.2"
 radon = "~6.0.1"
@@ -53,4 +53,4 @@ radon = "~6.0.1"
 ansi2html = "~1.9.2"
 pylint-report = "~2.4.2"
 pytest-html = "~4.1.1"
-Sphinx = "8.1.3" # Pinned for Python 3.10 support
+Sphinx = "8.1.3"
