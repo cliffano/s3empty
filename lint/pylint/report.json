@@ -71,7 +71,7 @@
         "fatal": 0,
         "info": 0,
         "refactor": 0,
-        "statement": 219,
+        "statement": 229,
         "warning": 0
       },
       "test_cli": {
@@ -84,7 +84,7 @@
         "warning": 0
       }
     },
-    "statement": 497,
+    "statement": 507,
     "error": 0,
     "warning": 0,
     "refactor": 0,
