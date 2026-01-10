@@ -273,20 +273,6 @@ class TestS3Empty(unittest.TestCase):
         self.assertEqual(mock_bucket_object_versions.delete.call_count, 1)
         mock_bucket_object_versions.delete.assert_has_calls([call()])
 
-    @patch("s3empty.empty_s3")
-    def test_cli(self, func_empty_s3):  # pylint: disable=too-many-arguments
-
-        func_empty_s3.return_value = None
-
-        runner = CliRunner()
-        result = runner.invoke(cli, ["--bucket-name", "some-bucket"])
-        assert not result.exception
-        assert result.exit_code == 0
-        assert result.output == ""
-
-        # should delegate call to apply
-        func_empty_s3.assert_called_once_with("some-bucket", None, 0, False, "info")
-
     @patch("boto3.resource")
     @patch("s3empty.init")
     @patch("s3empty.CFGRW")
@@ -435,6 +421,72 @@ class TestS3Empty(unittest.TestCase):
 
         self.assertEqual(mock_bucket_object_versions.delete.call_count, 1)
         mock_bucket_object_versions.delete.assert_has_calls([call()])
+
+    @patch("boto3.resource")
+    @patch("s3empty.init")
+    def test_empty_s3_with_batch_deletion(  # pylint: disable=too-many-arguments
+        self, func_init, func_resource
+    ):
+
+        mock_logger = unittest.mock.Mock()
+        func_init.return_value = mock_logger
+
+        mock_s3 = unittest.mock.Mock()
+        mock_s3.meta.client.get_paginator.return_value.paginate.return_value = [
+            {
+                "Versions": [
+                    {"Key": "k1", "VersionId": "v1"},
+                    {"Key": "k2", "VersionId": "v2"},
+                ]
+            },
+            {"DeleteMarkers": [{"Key": "k3", "VersionId": "v3"}]},
+        ]
+        mock_s3.meta.client.delete_objects.side_effect = [
+            {
+                "Deleted": [
+                    {"Key": "k1", "VersionId": "v1"},
+                    {"Key": "k2", "VersionId": "v2"},
+                ]
+            },
+            {"Deleted": [{"Key": "k3", "VersionId": "v3"}]},
+        ]
+
+        func_resource.return_value = mock_s3
+
+        empty_s3(bucket_name="some-bucket", conf_file=None, batch_size=2)
+
+        self.assertEqual(mock_s3.meta.client.delete_objects.call_count, 2)
+        mock_logger.info.assert_has_calls(
+            [
+                call("Buckets to be emptied: some-bucket"),
+                call(
+                    "Emptying objects and versions in bucket some-bucket in batches of 2"
+                ),
+                call("Deleted k1 v1"),
+                call("Deleted k2 v2"),
+                call(
+                    "Successfully deleted a batch of 2 objects/versions in bucket some-bucket"
+                ),
+                call("Deleted k3 v3"),
+                call(
+                    "Successfully deleted a batch of 1 objects/versions in bucket some-bucket"
+                ),
+            ]
+        )
+
+    @patch("s3empty.empty_s3")
+    def test_cli(self, func_empty_s3):  # pylint: disable=too-many-arguments
+
+        func_empty_s3.return_value = None
+
+        runner = CliRunner()
+        result = runner.invoke(cli, ["--bucket-name", "some-bucket"])
+        assert not result.exception
+        assert result.exit_code == 0
+        assert result.output == ""
+
+        # should delegate call to apply
+        func_empty_s3.assert_called_once_with("some-bucket", None, 0, False, "info")
 
     @patch("s3empty.empty_s3")
     def test_cli_with_log_level(
