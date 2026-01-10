@@ -435,20 +435,20 @@ class TestS3Empty(unittest.TestCase):
         mock_s3.meta.client.get_paginator.return_value.paginate.return_value = [
             {
                 "Versions": [
-                    {"Key": "k1", "VersionId": "v1"},
-                    {"Key": "k2", "VersionId": "v2"},
+                    {"Key": "somekey1", "VersionId": "somevalue1"},
+                    {"Key": "somekey2", "VersionId": "somevalue2"},
                 ]
             },
-            {"DeleteMarkers": [{"Key": "k3", "VersionId": "v3"}]},
+            {"DeleteMarkers": [{"Key": "somekey3", "VersionId": "somevalue3"}]},
         ]
         mock_s3.meta.client.delete_objects.side_effect = [
             {
                 "Deleted": [
-                    {"Key": "k1", "VersionId": "v1"},
-                    {"Key": "k2", "VersionId": "v2"},
+                    {"Key": "somekey1", "VersionId": "somevalue1"},
+                    {"Key": "somekey2", "VersionId": "somevalue2"},
                 ]
             },
-            {"Deleted": [{"Key": "k3", "VersionId": "v3"}]},
+            {"Deleted": [{"Key": "somekey3", "VersionId": "somevalue3"}]},
         ]
 
         func_resource.return_value = mock_s3
@@ -462,17 +462,50 @@ class TestS3Empty(unittest.TestCase):
                 call(
                     "Emptying objects and versions in bucket some-bucket in batches of 2"
                 ),
-                call("Deleted k1 v1"),
-                call("Deleted k2 v2"),
+                call("Deleted somekey1 somevalue1"),
+                call("Deleted somekey2 somevalue2"),
                 call(
                     "Successfully deleted a batch of 2 objects/versions in bucket some-bucket"
                 ),
-                call("Deleted k3 v3"),
+                call("Deleted somekey3 somevalue3"),
                 call(
                     "Successfully deleted a batch of 1 objects/versions in bucket some-bucket"
                 ),
             ]
         )
+
+    @patch("boto3.resource")
+    @patch("s3empty.init")
+    def test_empty_s3_with_batch_deletion_having_no_version_no_delete_marker(  # pylint: disable=too-many-arguments
+        self, func_init, func_resource
+    ):
+
+        mock_logger = unittest.mock.Mock()
+        func_init.return_value = mock_logger
+
+        mock_s3 = unittest.mock.Mock()
+        mock_s3.meta.client.get_paginator.return_value.paginate.return_value = [{}]
+
+        func_resource.return_value = mock_s3
+
+        empty_s3(bucket_name="some-bucket", conf_file=None, batch_size=2)
+
+        self.assertEqual(mock_logger.warn.call_count, 1)
+        mock_logger.warn.assert_has_calls(
+            [call("No objects or delete markers found in this page")]
+        )
+
+        self.assertEqual(mock_logger.info.call_count, 2)
+        mock_logger.info.assert_has_calls(
+            [
+                call("Buckets to be emptied: some-bucket"),
+                call(
+                    "Emptying objects and versions in bucket some-bucket in batches of 2"
+                ),
+            ]
+        )
+
+        self.assertEqual(mock_s3.meta.client.delete_objects.call_count, 0)
 
     @patch("s3empty.empty_s3")
     def test_cli(self, func_empty_s3):  # pylint: disable=too-many-arguments
