@@ -114,20 +114,23 @@ def _delete_in_batches(
 
 
 def _handle_response(logger, response: dict, success_message: str) -> None:
-    # AWS delete_objects can return a list (paginator path) or a dict (direct client call)
-    # Normalize both shapes to reuse the same logging helpers.
+    # AWS delete_objects usually returns a dict (or list of dicts from paginator).
+    # If the payload is not a dict/list of dicts with Deleted/Errors, treat it as unexpected.
     responses = response if isinstance(response, list) else [response]
 
     has_entries = False
     has_error = False
 
     for response_item in responses:
-        deleted = (
-            response_item.get("Deleted", []) if isinstance(response_item, dict) else []
-        )
-        errors = (
-            response_item.get("Errors", []) if isinstance(response_item, dict) else []
-        )
+        if not isinstance(response_item, dict):
+            has_entries = True
+            has_error = True
+            logger.error("Unexpected response:")
+            logger.error(response_item)
+            continue
+
+        deleted = response_item.get("Deleted", [])
+        errors = response_item.get("Errors", [])
 
         if deleted:
             has_entries = True
