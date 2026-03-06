@@ -1,3 +1,13 @@
 ---
 author: Cliffano Subagio
 package_name: s3empty
+generator:
+  component: python-cli
+  inputs:
+    project_id: s3empty
+    project_name: S3Empty
+    project_desc: Python CLI for conveniently emptying an AWS S3 bucket
+    author_name: Cliffano Subagio
+    author_email: cliffano@gmail.com
+    github_id: cliffano
+    github_repo: s3empty

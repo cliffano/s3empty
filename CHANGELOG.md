@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+- Upgrade PieMaker to 2.2.1
+
 ## 2.0.0 - 2026-01-10
 ### Added
 - Add upgrade-deps GH Actions workflow
