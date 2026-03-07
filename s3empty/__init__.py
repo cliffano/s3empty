@@ -4,6 +4,7 @@ s3empty
 =======
 Empty an AWS S3 bucket, versioned, not versioned, anything.
 """
+
 import boto3
 from botocore.exceptions import ClientError
 import click

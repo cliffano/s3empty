@@ -30,27 +30,27 @@ classifiers = [
 
   [tool.poetry.dependencies]
   python = "^3.10"
-  boto3 = "~1.42.25"
+  boto3 = "~1.42.63"
   cfgrw = "~1.0.0"
   click = "~8.3.1"
   conflog = "~2.1.0"
 
 [tool.poetry.group.dev.dependencies]
-black = "~25.12.0"
+black = "~26.3.0"
 twine = "~6.2.0"
-wheel = "~0.45.1"
+wheel = "~0.46.3"
 
 [tool.poetry.group.test.dependencies]
 aws-assume-role-lib = "~2.10.0"
-coverage = "~7.13.1"
-moto = "~5.1.19"
+coverage = "~7.13.4"
+moto = "~5.1.21"
 numpy = "1.26.4"
-pylint = "~4.0.4"
+pylint = "~4.0.5"
 pytest = "~9.0.2"
 radon = "~6.0.1"
 
 [tool.poetry.group.doc.dependencies]
 ansi2html = "~1.9.2"
 pylint-report = "~2.4.2"
-pytest-html = "~4.1.1"
+pytest-html = "~4.2.0"
 Sphinx = "8.1.3"
