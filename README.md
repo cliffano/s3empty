@@ -1,14 +1,12 @@
-<img align="right" src="https://raw.github.com/cliffano/s3empty/main/avatar.jpg" alt="Avatar"/>
+![Avatar](avatar.jpg)
 
 [![Build Status](https://github.com/cliffano/s3empty/workflows/CI/badge.svg)](https://github.com/cliffano/s3empty/actions?query=workflow%3ACI)
 [![Code Scanning Status](https://github.com/cliffano/s3empty/workflows/CodeQL/badge.svg)](https://github.com/cliffano/s3empty/actions?query=workflow%3ACodeQL)
 [![Dependencies Status](https://img.shields.io/librariesio/release/pypi/s3empty)](https://libraries.io/pypi/s3empty)
 [![Security Status](https://snyk.io/test/github/cliffano/s3empty/badge.svg)](https://snyk.io/test/github/cliffano/s3empty)
 [![Published Version](https://img.shields.io/pypi/v/s3empty.svg)](https://pypi.python.org/pypi/s3empty)
-<br/>
 
-S3Empty
--------
+# S3Empty
 
 S3Empty is a Python CLI for conveniently emptying an AWS S3 bucket. It handles versioned and non-versioned S3 buckets.
 
@@ -18,13 +16,11 @@ This tool is useful when you want to delete all objects in a bucket before delet
 
 ![S3Empty console screenshot](https://raw.github.com/cliffano/s3empty/master/screenshots/console.jpg "S3Empty console screenshot")
 
-Installation
-------------
+## Installation
 
     pip3 install s3empty
 
-Usage
------
+## Usage
 
 Run S3Empty with specified bucket name:
 
@@ -42,8 +38,7 @@ Show help guide:
 
     s3empty --help
 
-Configuration
--------------
+## Configuration
 
 You can specify multiple bucket names in S3Empty configuration file and give it a name with `.yaml` extension, e.g. `some-conf-file.yaml` :
 
@@ -69,8 +64,7 @@ And then call S3Empty:
 
     s3empty --conf-file path/to/some-conf-file.yaml.j2
 
-Permission
-----------
+## Permission
 
 Here's an IAM policy with minimum permissions required by S3Empty:
 
@@ -97,15 +91,13 @@ Here's an IAM policy with minimum permissions required by S3Empty:
 }
 ```
 
-FAQ
----
+## FAQ
 
 Q: How about using [S3 Lifecycle](https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lifecycle-mgmt.html) to delete objects in the bucket?
 
 A: S3 Lifecycle modifies the state of the S3 bucket by adding the lifecycle configuration. However, S3Empty aims to only modify the S3 objects without modifying the S3 bucket itself. Other than that, S3 Lifecycle has an [expiration delay](https://docs.aws.amazon.com/AmazonS3/latest/userguide/how-to-set-lifecycle-configuration-intro.html#lifecycle-considerations) which means, and I quote, "Amazon S3 might not actually delete these objects until days or even weeks later." S3Empty aims to start deleting the objects immediately.
 
-Colophon
---------
+## Colophon
 
 [Developer's Guide](https://cliffano.github.io/developers_guide.html#python)
 
