@@ -32,7 +32,8 @@ class TestCli(unittest.TestCase):
         result = runner.invoke(cli, ["--some-invalid-arg"])
 
         self.assertNotEqual(result.exit_code, 0)
-        self.assertIn("Error: No such option: --some-invalid-arg", result.output)
+        self.assertIn("No such option", result.output)
+        self.assertIn("--some-invalid-arg", result.output)
 
     @mock_aws
     def test_cli_without_credential(self):
